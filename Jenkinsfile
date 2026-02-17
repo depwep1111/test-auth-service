@@ -3,12 +3,12 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/depwep1111/test-auth-service.git'
+                git branch: 'main', url: 'https://github.com/depwep1111/test-auth-service.git'
             }
         }
         stage('Build') {
             steps {
-                sh './mvnw clean package -DskipTests'
+                bat 'mvnw clean package -DskipTests'
             }
         }
 //         stage('Docker Build') {
