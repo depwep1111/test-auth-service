@@ -11,6 +11,24 @@ pipeline {
                 bat 'mvnw clean package -DskipTests'
             }
         }
+        stage('Docker Build') {
+            steps {
+                bat 'docker build -t tranthanhvt0982/test-auth-service:latest .'
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([string(credentialsId: 'dockerhub-pass', variable: 'DOCKER_PASS')]) {
+                    bat 'echo %DOCKER_PASS% | docker login -u tranthanhvt0982 --password-stdin'
+                    bat 'docker push tranthanhvt0982/test-auth-service:latest'
+                }
+            }
+        }
+        stage('Deploy to Kubernetes') {
+            steps {
+                bat 'kubectl apply -f deployment.yaml'
+            }
+        }
 //         stage('Docker Build') {
 //             steps {
 //                 sh 'docker build -t your-dockerhub/auth-service:latest .'
